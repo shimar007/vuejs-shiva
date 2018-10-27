@@ -5,6 +5,7 @@ var browserSync = require('browser-sync');
 var concatCss = require('gulp-concat-css');
 var cleanCSS = require('gulp-clean-css');
 var sourcemaps = require('gulp-sourcemaps');
+var uglify = require('gulp-uglify');
 var runSequence = require('run-sequence');
 
 gulp.task('clear', () =>
@@ -40,10 +41,10 @@ gulp.task('sass', function() {
 })
 
 gulp.task('js', function() {
-    return gulp.src('app/js/**/*.js')
-      .pipe(concatCss("main.js")) 
-      .pipe(gulp.dest('app/js')) // Outputs it in the js folder
-      .pipe(browserSync.reload({ // Reloading with Browser Sync
+    return gulp.src('app/scripts/**/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('app/js')) // Outputs it in the js folder
+        .pipe(browserSync.reload({ // Reloading with Browser Sync
         stream: true
       }));
 })
@@ -55,7 +56,7 @@ gulp.task('watch', function() {
   })
 
 gulp.task('default', function(callback) {
-    runSequence(['clear', 'sass', 'browserSync'], 'watch',
+    runSequence(['clear', 'sass', 'js', 'browserSync'], 'watch',
       callback
     )
 })
